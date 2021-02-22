@@ -8,7 +8,7 @@ namespace ConsoleApp
 {
     internal class Program
     {
-        internal static void Main(string[] args)
+        internal static void Main()
         {
             var outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TypeScript");
 
@@ -23,7 +23,9 @@ namespace ConsoleApp
             var dtos = new List<Type>
             {
                 typeof(CustomerOrderDto),
-                typeof(VendorOrderDto)
+                typeof(VendorOrderDto),
+                typeof(UserDto),
+                typeof(CustomerUserDto),
             };
 
             foreach (var @enum in enums)
