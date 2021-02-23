@@ -12,8 +12,14 @@ namespace Dto
         public int Int { get; set; }
         public int? NullableInt { get; set; }
 
+        public float Float { get; set; }
+        public float? NullableFloat { get; set; }
+
         public double Double { get; set; }
         public double? NullableDouble { get; set; }
+
+        public decimal Decimal { get; set; }
+        public decimal? NullableDecimal { get; set; }
 
         public bool Bool { get; set; }
         public bool? NullableBool { get; set; }

@@ -18,9 +18,14 @@ namespace ITI.TypeScriptDtoGenerator
             EnumGenerator.GenerateEnum(type, outputPath);
         }
 
-        public static void GenerateDto(Type type, string outputPath)
+        public static void GenerateDtos(
+            List<Type> dtoTypes, 
+            List<Type> couldImportTypes, 
+            string imports, 
+            string outputPath
+        )
         {
-            DtoGenerator.GenerateDto(type, outputPath);
+            DtoGenerator.GenerateDtos(dtoTypes, couldImportTypes, imports, outputPath);
         }
     }
 }

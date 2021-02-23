@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Dto
 {
-    public class UserDto
+    public class EmailAddressDto
     {
-        public Guid Id { get; set; }
-        public EmailAddressDto? EmailAddress { get; set; }
+        public string? Value { get; set; }
     }
 }

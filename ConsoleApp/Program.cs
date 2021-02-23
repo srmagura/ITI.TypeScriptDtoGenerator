@@ -34,10 +34,9 @@ namespace ConsoleApp
             }
             Console.WriteLine("Generated TypeScript enums.");
 
-            foreach (var dto in dtos)
-            {
-                TypeScriptDtoGenerator.GenerateDto(dto, outputPath);
-            }
+            var imports = "import { EmailAddressDto } from './HandwrittenDtos'\n";
+
+            TypeScriptDtoGenerator.GenerateDtos(dtos, enums, imports, outputPath);
             Console.WriteLine("Generated TypeScript DTOs.");
 
             TypeScriptDtoGenerator.GenerateIndex(outputPath);
