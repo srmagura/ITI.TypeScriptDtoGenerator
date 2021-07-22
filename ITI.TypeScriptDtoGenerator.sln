@@ -3,16 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{EF8CA901-6290-4A18-A339-E41FB433C858}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{EF8CA901-6290-4A18-A339-E41FB433C858}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dto", "Dto\Dto.csproj", "{82875745-C691-4EAF-B9C2-E70AA710FBFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dto", "Dto\Dto.csproj", "{82875745-C691-4EAF-B9C2-E70AA710FBFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITI.TypeScriptDtoGenerator", "ITI.TypeScriptDtoGenerator\ITI.TypeScriptDtoGenerator.csproj", "{0D032291-2636-4AA8-B477-A80B6FAEDC82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITI.TypeScriptDtoGenerator", "ITI.TypeScriptDtoGenerator\ITI.TypeScriptDtoGenerator.csproj", "{0D032291-2636-4AA8-B477-A80B6FAEDC82}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{69D93767-AE35-486F-B3D6-38A74B7198A0}"
 	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
 		Update-NuGetPackage.ps1 = Update-NuGetPackage.ps1
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E491C46F-1765-48A9-8F83-73E3901E37D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +35,10 @@ Global
 		{0D032291-2636-4AA8-B477-A80B6FAEDC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D032291-2636-4AA8-B477-A80B6FAEDC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D032291-2636-4AA8-B477-A80B6FAEDC82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E491C46F-1765-48A9-8F83-73E3901E37D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E491C46F-1765-48A9-8F83-73E3901E37D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E491C46F-1765-48A9-8F83-73E3901E37D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E491C46F-1765-48A9-8F83-73E3901E37D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

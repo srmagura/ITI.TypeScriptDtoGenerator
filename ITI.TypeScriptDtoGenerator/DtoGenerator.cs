@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Namotion.Reflection;
 
 namespace ITI.TypeScriptDtoGenerator
 {
@@ -34,16 +35,17 @@ namespace ITI.TypeScriptDtoGenerator
             var extendsClause = "";
             if(type.BaseType != null && type.BaseType.Name != "Object")
             {
-                var baseType = MapType(type.BaseType, unknownTypes);
+                var baseType = MapType(type.BaseType.ToContextualType(), unknownTypes);
                 extendsClause += $" extends {baseType}";
             }
 
             interfaceBuilder.AppendLine($"export interface {type.Name}{extendsClause} {{");
 
-            foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance))
+            foreach (var property in type.GetContextualProperties())
             {
                 var propertyName = MapPropertyName(property.Name);
-                var propertyType = MapType(property.PropertyType, unknownTypes);
+                var propertyType = MapType(property, unknownTypes);
+
                 interfaceBuilder.AppendLine($"    {propertyName}: {propertyType}");
             }
 
@@ -78,12 +80,13 @@ namespace ITI.TypeScriptDtoGenerator
 
         private static string MapPropertyName(string name)
         {
-            return char.ToLowerInvariant(name[0]) + name.Substring(1);
+            return char.ToLowerInvariant(name[0]) + name[1..];
         }
 
-        public static string MapType(Type type, List<Type> unknownTypes)
+        internal static string MapType(ContextualType contextualType, List<Type> unknownTypes)
         {
-            var typeName = type.Name;
+            var type = contextualType.Type;
+            var typeName = contextualType.Type.Name;
 
             var rewrites = new Dictionary<string, string>
             {
@@ -107,17 +110,20 @@ namespace ITI.TypeScriptDtoGenerator
 
             if (type.FullName != null && type.FullName.Contains("System.Collections.Generic.List"))
             {
-                var genericArgumentTypeName = MapType(type.GetGenericArguments().Single(), unknownTypes);
-                typeName = genericArgumentTypeName + "[]";
-            }
-            else if (type.Name.Contains("Nullable"))
-            {
-                var genericArgumentTypeName = MapType(type.GetGenericArguments().Single(), unknownTypes);
-                typeName = genericArgumentTypeName + " | null | undefined";
+                var genericArgumentTypeName = MapType(contextualType.GenericArguments.Single(), unknownTypes);
+
+                if(genericArgumentTypeName.Contains(' '))
+                {
+                    typeName = $"({genericArgumentTypeName})[]";
+                }
+                else
+                {
+                    typeName = genericArgumentTypeName + "[]";
+                }
             }
             else if (type.IsGenericType)
             {
-                var genericArgumentNames = type.GetGenericArguments().Select(t => MapType(t, unknownTypes));
+                var genericArgumentNames = contextualType.GenericArguments.Select(t => MapType(t, unknownTypes));
 
                 typeName = typeName.Split('`')[0];
                 typeName += "<" + string.Join(", ", genericArgumentNames) + ">";
@@ -129,6 +135,9 @@ namespace ITI.TypeScriptDtoGenerator
                     unknownTypes.Add(type);
                 }
             }
+
+            if (contextualType.Nullability == Nullability.Nullable)
+                typeName += " | null | undefined";
 
             return typeName;
         }
