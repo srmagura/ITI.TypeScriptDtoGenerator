@@ -112,6 +112,7 @@ namespace ITI.TypeScriptDtoGenerator
                 ["Decimal"] = "number",
                 ["DateTime"] = "string",
                 ["DateTimeOffset"] = "string",
+                ["TimeSpan"] = "string",
                 ["Guid"] = "string"
             };
 

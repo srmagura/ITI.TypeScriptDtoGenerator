@@ -25,6 +25,9 @@ namespace UnitTests
             Assert.AreEqual("number", DtoGenerator.MapType(typeof(int).ToContextualType(), unknownTypes));
             Assert.AreEqual("number", DtoGenerator.MapType(typeof(double).ToContextualType(), unknownTypes));
             Assert.AreEqual("boolean", DtoGenerator.MapType(typeof(bool).ToContextualType(), unknownTypes));
+            Assert.AreEqual("string", DtoGenerator.MapType(typeof(DateTime).ToContextualType(), unknownTypes));
+            Assert.AreEqual("string", DtoGenerator.MapType(typeof(DateTimeOffset).ToContextualType(), unknownTypes));
+            Assert.AreEqual("string", DtoGenerator.MapType(typeof(TimeSpan).ToContextualType(), unknownTypes));
 
             Assert.AreEqual(0, unknownTypes.Count);
         }
