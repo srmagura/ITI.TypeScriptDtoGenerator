@@ -14,7 +14,7 @@ namespace ITI.TypeScriptDtoGenerator
             output.AppendLine();
             output.AppendLine($"export enum {type.Name} {{");
 
-            foreach(int value in Enum.GetValues(type))
+            foreach (int value in Enum.GetValues(type))
             {
                 var name = Enum.GetName(type, value);
                 output.AppendLine($"    {name} = {value},");
@@ -22,8 +22,8 @@ namespace ITI.TypeScriptDtoGenerator
 
             output.AppendLine($"}}");
 
-
             var filePath = Path.Combine(outputPath, $"{type.Name}.ts");
+            Util.ConvertLineEndings(output);
             File.WriteAllText(filePath, output.ToString());
         }
     }
