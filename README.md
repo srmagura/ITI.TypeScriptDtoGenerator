@@ -43,3 +43,15 @@ internal class Program
     }
 }
 ```
+
+## Publishing
+
+0. Install https://github.com/microsoft/artifacts-credprovider
+1. Update the version number the `ITI.TypeScriptDtoGenerator.csproj` file.
+2. In PowerShell run
+
+   ```pwsh
+   ./Update-NuGetPackages.ps1 x.x.x
+   ```
+
+   where `x.x.x` is the version number.
