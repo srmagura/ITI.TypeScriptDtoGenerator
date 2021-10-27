@@ -15,7 +15,7 @@ namespace ITI.TypeScriptDtoGenerator
 
             if (stringBuilder[^1] != '\n')
             {
-                stringBuilder.Append("\n");
+                stringBuilder.Append('\n');
             }
         }
     }
