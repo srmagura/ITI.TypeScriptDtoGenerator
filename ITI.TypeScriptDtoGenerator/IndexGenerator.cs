@@ -22,6 +22,7 @@ namespace ITI.TypeScriptDtoGenerator
                 output.AppendLine($"export * from './{noExtension}'");
             }
 
+            Util.ConvertLineEndings(output);
             var outputPath = Path.Combine(directoryPath, "index.ts");
             File.WriteAllText(outputPath, output.ToString());
         }

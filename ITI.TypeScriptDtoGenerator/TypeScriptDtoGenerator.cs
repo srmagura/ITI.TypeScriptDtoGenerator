@@ -19,9 +19,9 @@ namespace ITI.TypeScriptDtoGenerator
         }
 
         public static void GenerateDtos(
-            List<Type> dtoTypes, 
-            List<Type> couldImportTypes, 
-            string imports, 
+            List<Type> dtoTypes,
+            List<Type> couldImportTypes,
+            string imports,
             string outputPath
         )
         {
