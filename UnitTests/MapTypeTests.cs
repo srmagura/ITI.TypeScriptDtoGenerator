@@ -1,9 +1,6 @@
 using ITI.TypeScriptDtoGenerator;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using Namotion.Reflection;
-using System.Linq;
 
 namespace UnitTests
 {

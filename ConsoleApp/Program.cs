@@ -1,8 +1,5 @@
 ﻿using Dto;
 using ITI.TypeScriptDtoGenerator;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace ConsoleApp
 {

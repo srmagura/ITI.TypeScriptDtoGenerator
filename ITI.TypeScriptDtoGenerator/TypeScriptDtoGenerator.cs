@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ITI.TypeScriptDtoGenerator
+﻿namespace ITI.TypeScriptDtoGenerator
 {
     public static class TypeScriptDtoGenerator
     {
