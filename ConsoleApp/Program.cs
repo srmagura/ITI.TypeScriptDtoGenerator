@@ -1,9 +1,9 @@
-﻿using Dto;
+using Dto;
 using ITI.TypeScriptDtoGenerator;
 
 namespace ConsoleApp
 {
-    internal class Program
+    internal static class Program
     {
         internal static void Main()
         {
