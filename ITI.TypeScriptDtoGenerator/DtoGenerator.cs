@@ -47,9 +47,7 @@ namespace ITI.TypeScriptDtoGenerator
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance))
             {
                 var propertyName = MapPropertyName(property.Name);
-
-                var contextualType = property.ToContextualProperty();
-                var propertyType = MapType(contextualType, unknownTypes);
+                var propertyType = MapType(property.ToContextualProperty().PropertyType, unknownTypes);
 
                 interfaceBuilder.AppendLine($"    {propertyName}: {propertyType}");
             }

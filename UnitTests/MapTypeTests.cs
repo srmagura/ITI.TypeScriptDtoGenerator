@@ -67,12 +67,12 @@ namespace UnitTests
             var nullableStringList = properties.Single(p => p.Name == "NullableStringList");
 
             Assert.AreEqual(
-                "string | null | undefined", 
-                DtoGenerator.MapType(nullableString, unknownTypes)
+                "string | null | undefined",
+                DtoGenerator.MapType(nullableString.PropertyType, unknownTypes)
             );
             Assert.AreEqual(
-                "(string | null | undefined)[] | null | undefined", 
-                DtoGenerator.MapType(nullableStringList, unknownTypes)
+                "(string | null | undefined)[] | null | undefined",
+                DtoGenerator.MapType(nullableStringList.PropertyType, unknownTypes)
             );
 
             Assert.AreEqual(0, unknownTypes.Count);
