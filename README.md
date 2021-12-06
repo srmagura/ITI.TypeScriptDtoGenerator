@@ -51,7 +51,7 @@ internal class Program
 2. In PowerShell run
 
    ```pwsh
-   ./Update-NuGetPackages.ps1 x.x.x
+   ./Publish-NuGetPackage.ps1 x.x.x
    ```
 
    where `x.x.x` is the version number.
