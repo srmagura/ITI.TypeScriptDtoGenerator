@@ -1,23 +1,23 @@
 using Dto;
 using ITI.TypeScriptDtoGenerator;
 
-namespace ConsoleApp
+namespace ConsoleApp;
+
+internal static class Program
 {
-    internal static class Program
+    internal static void Main()
     {
-        internal static void Main()
-        {
-            var outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TypeScript");
+        var outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TypeScript");
 
-            if (!Directory.Exists(outputPath))
-                Directory.CreateDirectory(outputPath);
+        if (!Directory.Exists(outputPath))
+            Directory.CreateDirectory(outputPath);
 
-            var enums = new List<Type>
+        var enums = new List<Type>
             {
                 typeof(ServiceType)
             };
 
-            var dtos = new List<Type>
+        var dtos = new List<Type>
             {
                 typeof(CustomerOrderDto),
                 typeof(VendorOrderDto),
@@ -25,19 +25,19 @@ namespace ConsoleApp
                 typeof(CustomerUserDto),
             };
 
-            foreach (var @enum in enums)
-            {
-                TypeScriptDtoGenerator.GenerateEnum(@enum, outputPath);
-            }
-            Console.WriteLine("Generated TypeScript enums.");
-
-            var imports = "import { EmailAddressDto } from './HandwrittenDtos'\n";
-
-            TypeScriptDtoGenerator.GenerateDtos(dtos, enums, imports, outputPath);
-            Console.WriteLine("Generated TypeScript DTOs.");
-
-            TypeScriptDtoGenerator.GenerateIndex(outputPath);
-            Console.WriteLine("Generated TypeScript DTO index.");
+        foreach (var @enum in enums)
+        {
+            TypeScriptDtoGenerator.GenerateEnum(@enum, outputPath);
         }
+
+        Console.WriteLine("Generated TypeScript enums.");
+
+        var imports = "import { EmailAddressDto } from './HandwrittenDtos'\n";
+
+        TypeScriptDtoGenerator.GenerateDtos(dtos, enums, imports, outputPath);
+        Console.WriteLine("Generated TypeScript DTOs.");
+
+        TypeScriptDtoGenerator.GenerateIndex(outputPath);
+        Console.WriteLine("Generated TypeScript DTO index.");
     }
 }
