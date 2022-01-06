@@ -63,5 +63,22 @@ namespace UnitTests
 
             Assert.IsTrue(dtoString.Contains("pair: PairOfGenericLists<Identity, string>"));
         }
+
+        public class GeoRectangle
+        {
+            public double NELat { get; set; }
+            public double NELng { get; set; }
+            public double SWLat { get; set; }
+            public double SWLng { get; set; }
+        }
+
+        [TestMethod]
+        public void ConsecutiveInitialCapitalsGetCamelizedToLower()
+        {
+            var dtoString = DtoGenerator.GenerateDtoToString(typeof(GeoRectangle), new(), null);
+            Console.WriteLine(dtoString);
+
+            Assert.IsTrue(dtoString.Contains("neLat: number"));
+        }
     }
 }

@@ -98,9 +98,74 @@ internal static class DtoGenerator
         return output.ToString();
     }
 
+    private static string ToCamelCase(string s)
+    {
+        // Adapted from Newtonsoft.Json StringUtils.cs
+
+        // Copyright (c) 2007 James Newton-King
+        //
+        // Permission is hereby granted, free of charge, to any person
+        // obtaining a copy of this software and associated documentation
+        // files (the "Software"), to deal in the Software without
+        // restriction, including without limitation the rights to use,
+        // copy, modify, merge, publish, distribute, sublicense, and/or sell
+        // copies of the Software, and to permit persons to whom the
+        // Software is furnished to do so, subject to the following
+        // conditions:
+        //
+        // The above copyright notice and this permission notice shall be
+        // included in all copies or substantial portions of the Software.
+        //
+        // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+        // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+        // OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+        // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+        // HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+        // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+        // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+        // OTHER DEALINGS IN THE SOFTWARE.
+        if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))
+        {
+            return s;
+        }
+
+        char[] chars = s.ToCharArray();
+
+        for (int i = 0; i < chars.Length; i++)
+        {
+            if (i == 1 && !char.IsUpper(chars[i]))
+            {
+                break;
+            }
+
+            bool hasNext = i + 1 < chars.Length;
+            if (i > 0 && hasNext && !char.IsUpper(chars[i + 1]))
+            {
+                // if the next character is a space, which is not considered uppercase 
+                // (otherwise we wouldn't be here...)
+                // we want to ensure that the following:
+                // 'FOO bar' is rewritten as 'foo bar', and not as 'foO bar'
+                // The code was written in such a way that the first word in uppercase
+                // ends when if finds an uppercase letter followed by a lowercase letter.
+                // now a ' ' (space, (char)32) is considered not upper
+                // but in that case we still want our current character to become lowercase
+                if (char.IsSeparator(chars[i + 1]))
+                {
+                    chars[i] = char.ToLowerInvariant(chars[i]);
+                }
+
+                break;
+            }
+
+            chars[i] = char.ToLowerInvariant(chars[i]);
+        }
+
+        return new string(chars);
+    }
+
     private static string MapPropertyName(string name)
     {
-        return char.ToLowerInvariant(name[0]) + name[1..];
+        return ToCamelCase(name);
     }
 
     internal static string MapType(ContextualType contextualType, List<Type> unknownTypes)
