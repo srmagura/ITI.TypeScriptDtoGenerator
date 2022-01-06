@@ -26,8 +26,22 @@ internal static class DtoGenerator
     {
         var dtoString = GenerateDtoToString(type, couldImportTypes, imports);
 
-        var filePath = Path.Combine(outputPath, $"{type.Name}.ts");
+        var filePath = Path.Combine(outputPath, $"{GetTypeScriptFileName(type)}.ts");
         File.WriteAllText(filePath, dtoString);
+    }
+
+    internal static string GetTypeScriptFileName(Type type)
+    {
+        if (!type.IsGenericTypeDefinition) return type.Name;
+
+        return $"{type.Name.Split('`')[0]}";
+    }
+
+    internal static string GetTypeScriptTypeName(Type type)
+    {
+        if (!type.IsGenericTypeDefinition) return type.Name;
+
+        return $"{type.Name.Split('`')[0]}<{string.Join(",",type.GetGenericArguments().Select(a => a.Name))}>";
     }
 
     internal static string GenerateDtoToString(Type type, List<Type> couldImportTypes, string? imports)
@@ -42,7 +56,7 @@ internal static class DtoGenerator
             extendsClause += $" extends {baseType}";
         }
 
-        interfaceBuilder.AppendLine($"export interface {type.Name}{extendsClause} {{");
+        interfaceBuilder.AppendLine($"export interface {GetTypeScriptTypeName(type)}{extendsClause} {{");
 
         foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance))
         {
@@ -114,7 +128,7 @@ internal static class DtoGenerator
         {
             typeName = rewrites[typeName];
         }
-        else if (type.FullName != null && type.FullName.Contains("System.Collections.Generic.List"))
+        else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
         {
             typeName = MapEnumerable(contextualType.GenericArguments.Single(), unknownTypes);
         }
