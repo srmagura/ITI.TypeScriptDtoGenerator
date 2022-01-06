@@ -47,9 +47,10 @@ namespace UnitTests
             Assert.IsTrue(listString.Contains("export interface GenericList<TRow> {"));
             Assert.IsTrue(listString.Contains("rows: TRow[]"));
 
-            var pairString = DtoGenerator.GenerateDtoToString(typeof(PairOfGenericLists<,>), new(), null);
+            var pairString = DtoGenerator.GenerateDtoToString(typeof(PairOfGenericLists<,>), new() { typeof(PairOfGenericLists<,>), typeof(GenericList<>) }, null);
             Console.WriteLine(pairString);
 
+            Assert.IsTrue(pairString.Contains("import { GenericList } from './GenericList'"));
             Assert.IsTrue(pairString.Contains("export interface PairOfGenericLists<TRow1,TRow2> {"));
             Assert.IsTrue(pairString.Contains("pageOne: GenericList<TRow1>"));
             Assert.IsTrue(pairString.Contains("pageTwo: GenericList<TRow2>"));
@@ -58,13 +59,14 @@ namespace UnitTests
         [TestMethod]
         public void CanGenerateGenericDtoUsages()
         {
-            var dtoString = DtoGenerator.GenerateDtoToString(typeof(ExampleObject), new(), null);
+            var dtoString = DtoGenerator.GenerateDtoToString(typeof(ExampleObject), new() { typeof(Identity) }, null);
             Console.WriteLine(dtoString);
 
             Assert.IsTrue(dtoString.Contains("pair: PairOfGenericLists<Identity, string>"));
+            Assert.IsTrue(dtoString.Contains("import { Identity } from './Identity'"));
         }
 
-        public class GeoRectangle
+        private class GeoRectangle
         {
             public double NELat { get; set; }
             public double NELng { get; set; }
@@ -79,6 +81,21 @@ namespace UnitTests
             Console.WriteLine(dtoString);
 
             Assert.IsTrue(dtoString.Contains("neLat: number"));
+        }
+
+        private class ThingWithIdentity
+        {
+            public string Name { get; set; }
+            public Identity? Id { get; set; }
+        }
+
+        [TestMethod]
+        public void ReferenceToOtherTypeGeneratesImport()
+        {
+            var dtoString = DtoGenerator.GenerateDtoToString(typeof(ThingWithIdentity), new() { typeof(Identity) }, null);
+            Console.WriteLine(dtoString);
+
+            Assert.IsTrue(dtoString.Contains("import { Identity } from './Identity'"));
         }
     }
 }

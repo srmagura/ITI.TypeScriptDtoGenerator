@@ -32,7 +32,7 @@ internal static class DtoGenerator
 
     internal static string GetTypeScriptFileName(Type type)
     {
-        if (!type.IsGenericTypeDefinition) return type.Name;
+        if (!type.IsGenericTypeDefinition && !type.IsGenericType) return type.Name;
 
         return $"{type.Name.Split('`')[0]}";
     }
@@ -84,8 +84,8 @@ internal static class DtoGenerator
 
     private static string GenerateImports(List<Type> couldImportTypes, List<Type> unknownTypes)
     {
-        var couldImportTypeNames = couldImportTypes.Select(t => t.Name).ToHashSet();
-        var unknownTypeNames = unknownTypes.Select(t => t.Name).ToHashSet();
+        var couldImportTypeNames = couldImportTypes.Select(GetTypeScriptFileName).ToHashSet();
+        var unknownTypeNames = unknownTypes.Select(GetTypeScriptFileName).ToHashSet();
         var typeNamesToImport = unknownTypeNames.Intersect(couldImportTypeNames);
 
         var output = new StringBuilder();
@@ -211,8 +211,10 @@ internal static class DtoGenerator
 
             typeName = typeName.Split('`')[0];
             typeName += "<" + string.Join(", ", genericArgumentNames) + ">";
+
+            unknownTypes.Add(type);
         }
-        else
+        else if (!type.IsGenericParameter)
         {
             unknownTypes.Add(type);
         }
