@@ -2,7 +2,7 @@
 
 ## 1.3.3
 
-- Fix `index.ts` imports in arbitrary order on Linux
+- Fix `index.ts` exports being in an arbitrary order on Linux
 
 ## 1.3.2
 
