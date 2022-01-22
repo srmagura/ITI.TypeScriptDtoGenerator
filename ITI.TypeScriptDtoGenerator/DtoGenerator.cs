@@ -26,22 +26,22 @@ internal static class DtoGenerator
     {
         var dtoString = GenerateDtoToString(type, couldImportTypes, imports);
 
-        var filePath = Path.Combine(outputPath, $"{GetTypeScriptFileName(type)}.ts");
+        var filePath = Path.Combine(outputPath, $"{GetExtensionlessTypeScriptFilename(type)}.ts");
         File.WriteAllText(filePath, dtoString);
     }
 
-    internal static string GetTypeScriptFileName(Type type)
+    internal static string GetExtensionlessTypeScriptFilename(Type type)
     {
         if (!type.IsGenericTypeDefinition && !type.IsGenericType) return type.Name;
 
-        return $"{type.Name.Split('`')[0]}";
+        return type.Name.Split('`')[0];
     }
 
     internal static string GetTypeScriptTypeName(Type type)
     {
         if (!type.IsGenericTypeDefinition) return type.Name;
 
-        return $"{type.Name.Split('`')[0]}<{string.Join(",",type.GetGenericArguments().Select(a => a.Name))}>";
+        return $"{type.Name.Split('`')[0]}<{string.Join(",", type.GetGenericArguments().Select(a => a.Name))}>";
     }
 
     internal static string GenerateDtoToString(Type type, List<Type> couldImportTypes, string? imports)
@@ -84,8 +84,8 @@ internal static class DtoGenerator
 
     private static string GenerateImports(List<Type> couldImportTypes, List<Type> unknownTypes)
     {
-        var couldImportTypeNames = couldImportTypes.Select(GetTypeScriptFileName).ToHashSet();
-        var unknownTypeNames = unknownTypes.Select(GetTypeScriptFileName).ToHashSet();
+        var couldImportTypeNames = couldImportTypes.Select(GetExtensionlessTypeScriptFilename).ToHashSet();
+        var unknownTypeNames = unknownTypes.Select(GetExtensionlessTypeScriptFilename).ToHashSet();
         var typeNamesToImport = unknownTypeNames.Intersect(couldImportTypeNames);
 
         var output = new StringBuilder();
@@ -98,32 +98,9 @@ internal static class DtoGenerator
         return output.ToString();
     }
 
+    // Adapted from Newtonsoft.Json StringUtils.cs
     private static string ToCamelCase(string s)
     {
-        // Adapted from Newtonsoft.Json StringUtils.cs
-
-        // Copyright (c) 2007 James Newton-King
-        //
-        // Permission is hereby granted, free of charge, to any person
-        // obtaining a copy of this software and associated documentation
-        // files (the "Software"), to deal in the Software without
-        // restriction, including without limitation the rights to use,
-        // copy, modify, merge, publish, distribute, sublicense, and/or sell
-        // copies of the Software, and to permit persons to whom the
-        // Software is furnished to do so, subject to the following
-        // conditions:
-        //
-        // The above copyright notice and this permission notice shall be
-        // included in all copies or substantial portions of the Software.
-        //
-        // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-        // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-        // OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-        // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-        // HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-        // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-        // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-        // OTHER DEALINGS IN THE SOFTWARE.
         if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))
         {
             return s;
@@ -141,7 +118,7 @@ internal static class DtoGenerator
             bool hasNext = i + 1 < chars.Length;
             if (i > 0 && hasNext && !char.IsUpper(chars[i + 1]))
             {
-                // if the next character is a space, which is not considered uppercase 
+                // if the next character is a space, which is not considered uppercase
                 // (otherwise we wouldn't be here...)
                 // we want to ensure that the following:
                 // 'FOO bar' is rewritten as 'foo bar', and not as 'foO bar'

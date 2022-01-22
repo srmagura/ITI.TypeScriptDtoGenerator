@@ -13,20 +13,20 @@ namespace UnitTests
 
         private class GenericList<TRow>
         {
-            public List<TRow> Rows { get; set; }
+            public List<TRow> Rows { get; set; } = new();
 
             public int FullLengthBeforeFiltering { get; set; }
         }
 
         private class PairOfGenericLists<TRow1, TRow2>
         {
-            public GenericList<TRow1> PageOne { get; set; }
-            public GenericList<TRow2> PageTwo { get; set; }
+            public GenericList<TRow1> PageOne { get; set; } = new();
+            public GenericList<TRow2> PageTwo { get; set; } = new();
         }
 
         private class ExampleObject
         {
-            public PairOfGenericLists<Identity, string> Pair { get; set; }
+            public PairOfGenericLists<Identity, string> Pair { get; set; } = new();
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace UnitTests
 
         private class ThingWithIdentity
         {
-            public string Name { get; set; }
+            public string? Name { get; set; }
             public Identity? Id { get; set; }
         }
 
