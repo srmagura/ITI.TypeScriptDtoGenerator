@@ -1,8 +1,9 @@
-﻿namespace ITI.TypeScriptDtoGenerator;
+namespace ITI.TypeScriptDtoGenerator;
 
 public enum DtoGenerationNullHandling
 {
     TreatUnknownAsNonNullable = 0,
     TreatUnknownAsNullable = 1,
     TreatAllReferenceTypesAsNullable = 2,
+    TreatNothingAsNullable = 3,
 }

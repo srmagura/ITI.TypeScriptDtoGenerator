@@ -111,7 +111,7 @@ namespace UnitTests
         }
 
 #nullable disable
-        private class ThingWithReferences
+        private class ThingWithReferences : GeoRectangle
         {
             public string Name { get; set; }
             public Identity Id { get; set; }
@@ -128,6 +128,7 @@ namespace UnitTests
                 });
                 Console.WriteLine(dtoString);
 
+                Assert.IsTrue(dtoString.Contains("extends GeoRectangle {"));
                 Assert.IsTrue(dtoString.Contains("name: string\n"));
             }
             {
@@ -137,6 +138,7 @@ namespace UnitTests
                 });
                 Console.WriteLine(dtoString);
 
+                Assert.IsTrue(dtoString.Contains("extends GeoRectangle {"));
                 Assert.IsTrue(dtoString.Contains("name: string | null | undefined\n"));
             }
             {
@@ -146,6 +148,7 @@ namespace UnitTests
                 });
                 Console.WriteLine(dtoString);
 
+                Assert.IsTrue(dtoString.Contains("extends GeoRectangle {"));
                 Assert.IsTrue(dtoString.Contains("name: string | null | undefined\n"));
             }
         }

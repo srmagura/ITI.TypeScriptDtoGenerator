@@ -51,7 +51,7 @@ internal static class DtoGenerator
         var extendsClause = "";
         if (type.BaseType != null && type.BaseType.Name != "Object")
         {
-            var baseType = MapType(type.BaseType.ToContextualType(), unknownTypes, config.NullHandling);
+            var baseType = MapType(type.BaseType.ToContextualType(), unknownTypes, DtoGenerationNullHandling.TreatNothingAsNullable);
             extendsClause += $" extends {baseType}";
         }
 
@@ -156,6 +156,7 @@ internal static class DtoGenerator
         { DtoGenerationNullHandling.TreatUnknownAsNonNullable, ct => ct.Nullability == Nullability.Nullable },
         { DtoGenerationNullHandling.TreatUnknownAsNullable, ct => ct.Nullability != Nullability.NotNullable },
         { DtoGenerationNullHandling.TreatAllReferenceTypesAsNullable, ct => ct.Nullability == Nullability.Nullable || !ct.IsValueType },
+        { DtoGenerationNullHandling.TreatNothingAsNullable, ct => false },
     };
 
     internal static string MapType(ContextualType contextualType, List<Type> unknownTypes, DtoGenerationNullHandling nullHandling = DtoGenerationNullHandling.TreatUnknownAsNonNullable)
