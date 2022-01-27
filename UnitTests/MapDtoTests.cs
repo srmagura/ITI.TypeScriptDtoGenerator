@@ -32,7 +32,7 @@ namespace UnitTests
         [TestMethod]
         public void ItIgnoresCompilerGeneratedProperties()
         {
-            var dtoString = DtoGenerator.GenerateDtoToString(typeof(Identity), new(), null);
+            var dtoString = DtoGenerator.GenerateDtoToString(typeof(Identity), new(), new DtoGenerationConfig());
 
             Assert.IsTrue(dtoString.Contains("guid: string"));
             Assert.IsFalse(dtoString.Contains("equalityContract"));
@@ -41,13 +41,13 @@ namespace UnitTests
         [TestMethod]
         public void CanGenerateGenericDtos()
         {
-            var listString = DtoGenerator.GenerateDtoToString(typeof(GenericList<>), new(), null);
+            var listString = DtoGenerator.GenerateDtoToString(typeof(GenericList<>), new(), new DtoGenerationConfig());
             Console.WriteLine(listString);
 
             Assert.IsTrue(listString.Contains("export interface GenericList<TRow> {"));
             Assert.IsTrue(listString.Contains("rows: TRow[]"));
 
-            var pairString = DtoGenerator.GenerateDtoToString(typeof(PairOfGenericLists<,>), new() { typeof(PairOfGenericLists<,>), typeof(GenericList<>) }, null);
+            var pairString = DtoGenerator.GenerateDtoToString(typeof(PairOfGenericLists<,>), new() { typeof(PairOfGenericLists<,>), typeof(GenericList<>) }, new DtoGenerationConfig());
             Console.WriteLine(pairString);
 
             Assert.IsTrue(pairString.Contains("import { GenericList } from './GenericList'"));
@@ -59,7 +59,7 @@ namespace UnitTests
         [TestMethod]
         public void CanGenerateGenericDtoUsages()
         {
-            var dtoString = DtoGenerator.GenerateDtoToString(typeof(ExampleObject), new() { typeof(Identity) }, null);
+            var dtoString = DtoGenerator.GenerateDtoToString(typeof(ExampleObject), new() { typeof(Identity) }, new DtoGenerationConfig());
             Console.WriteLine(dtoString);
 
             Assert.IsTrue(dtoString.Contains("pair: PairOfGenericLists<Identity, string>"));
@@ -77,7 +77,7 @@ namespace UnitTests
         [TestMethod]
         public void ConsecutiveInitialCapitalsGetCamelizedToLower()
         {
-            var dtoString = DtoGenerator.GenerateDtoToString(typeof(GeoRectangle), new(), null);
+            var dtoString = DtoGenerator.GenerateDtoToString(typeof(GeoRectangle), new(), new DtoGenerationConfig());
             Console.WriteLine(dtoString);
 
             Assert.IsTrue(dtoString.Contains("neLat: number"));
@@ -92,10 +92,22 @@ namespace UnitTests
         [TestMethod]
         public void ReferenceToOtherTypeGeneratesImport()
         {
-            var dtoString = DtoGenerator.GenerateDtoToString(typeof(ThingWithIdentity), new() { typeof(Identity) }, null);
+            var dtoString = DtoGenerator.GenerateDtoToString(typeof(ThingWithIdentity), new() { typeof(Identity) }, new DtoGenerationConfig());
             Console.WriteLine(dtoString);
 
             Assert.IsTrue(dtoString.Contains("import { Identity } from './Identity'"));
+        }
+
+        [TestMethod]
+        public void TypeNameConst()
+        {
+            var dtoString = DtoGenerator.GenerateDtoToString(typeof(ThingWithIdentity), new() { typeof(Identity) }, new DtoGenerationConfig
+            {
+                ExportTypeNameAsConstant = t => t == typeof(ThingWithIdentity)
+            });
+            Console.WriteLine(dtoString);
+
+            Assert.IsTrue(dtoString.Contains("export const ThingWithIdentityTypeName = 'ThingWithIdentity'"));
         }
     }
 }

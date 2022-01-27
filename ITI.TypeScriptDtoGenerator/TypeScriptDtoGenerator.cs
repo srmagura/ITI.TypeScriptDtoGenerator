@@ -15,10 +15,29 @@ public static class TypeScriptDtoGenerator
     public static void GenerateDtos(
         List<Type> dtoTypes,
         List<Type> couldImportTypes,
-        string imports,
-        string outputPath
+        DtoGenerationConfig config
     )
     {
-        DtoGenerator.GenerateDtos(dtoTypes, couldImportTypes, imports, outputPath);
+        DtoGenerator.GenerateDtos(dtoTypes, couldImportTypes, config);
     }
+
+    public static void GenerateDtos(
+        List<Type> dtoTypes,
+        List<Type> couldImportTypes,
+        string imports,
+        string outputPath,
+        Func<Type, bool> exportTypeNameAsConstant
+    ) => GenerateDtos(dtoTypes, couldImportTypes, new DtoGenerationConfig
+        {
+            Imports = imports,
+            OutputPath = outputPath,
+            ExportTypeNameAsConstant = exportTypeNameAsConstant,
+        });
+
+    public static void GenerateDtos(
+        List<Type> dtoTypes,
+        List<Type> couldImportTypes,
+        string imports,
+        string outputPath
+    ) => GenerateDtos(dtoTypes, couldImportTypes, imports, outputPath, t => false);
 }
