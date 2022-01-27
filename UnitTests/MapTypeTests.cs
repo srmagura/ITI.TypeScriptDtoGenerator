@@ -76,6 +76,10 @@ public class MapTypeTests
     {
         public string? NullableString { get; set; }
         public List<string?>? NullableStringList { get; set; }
+
+        public char Character { get; set; }
+
+        public char? NullableCharacter { get; set; }
     }
 
     [TestMethod]
@@ -94,6 +98,28 @@ public class MapTypeTests
         Assert.AreEqual(
             "(string | null | undefined)[] | null | undefined",
             DtoGenerator.MapType(nullableStringList.PropertyType, unknownTypes)
+        );
+
+        Assert.AreEqual(0, unknownTypes.Count);
+    }
+
+    [TestMethod]
+    public void CharsMapToString()
+    {
+        var unknownTypes = new List<Type>();
+
+        var properties = typeof(TestDto).GetContextualProperties();
+        var character = properties.Single(p => p.Name == "Character");
+        var nullableCharacter = properties.Single(p => p.Name == "NullableCharacter");
+
+        Assert.AreEqual(
+            "string",
+            DtoGenerator.MapType(character.PropertyType, unknownTypes)
+        );
+
+        Assert.AreEqual(
+            "string | null | undefined",
+            DtoGenerator.MapType(nullableCharacter.PropertyType, unknownTypes)
         );
 
         Assert.AreEqual(0, unknownTypes.Count);

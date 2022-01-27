@@ -158,6 +158,7 @@ internal static class DtoGenerator
 
         var rewrites = new Dictionary<string, string>
         {
+            ["Char"] = "string",
             ["String"] = "string",
             ["Boolean"] = "boolean",
             ["Int32"] = "number",
