@@ -51,7 +51,7 @@ internal static class DtoGenerator
         var extendsClause = "";
         if (type.BaseType != null && type.BaseType.Name != "Object")
         {
-            var baseType = MapType(type.BaseType.ToContextualType(), unknownTypes);
+            var baseType = MapType(type.BaseType.ToContextualType(), unknownTypes, config.NullHandling);
             extendsClause += $" extends {baseType}";
         }
 
@@ -67,7 +67,7 @@ internal static class DtoGenerator
         foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance))
         {
             var propertyName = MapPropertyName(property.Name);
-            var propertyType = MapType(property.ToContextualProperty().PropertyType, unknownTypes);
+            var propertyType = MapType(property.ToContextualProperty().PropertyType, unknownTypes, config.NullHandling);
 
             interfaceBuilder.AppendLine($"    {propertyName}: {propertyType}");
         }
@@ -151,7 +151,14 @@ internal static class DtoGenerator
         return ToCamelCase(name);
     }
 
-    internal static string MapType(ContextualType contextualType, List<Type> unknownTypes)
+    private static readonly Dictionary<DtoGenerationNullHandling, Func<ContextualType, bool>> NullHandlingRules = new()
+    {
+        { DtoGenerationNullHandling.TreatUnknownAsNonNullable, ct => ct.Nullability == Nullability.Nullable },
+        { DtoGenerationNullHandling.TreatUnknownAsNullable, ct => ct.Nullability != Nullability.NotNullable },
+        { DtoGenerationNullHandling.TreatAllReferenceTypesAsNullable, ct => ct.Nullability == Nullability.Nullable || !ct.IsValueType },
+    };
+
+    internal static string MapType(ContextualType contextualType, List<Type> unknownTypes, DtoGenerationNullHandling nullHandling = DtoGenerationNullHandling.TreatUnknownAsNonNullable)
     {
         var type = contextualType.Type;
         var typeName = contextualType.Type.Name;
@@ -179,7 +186,7 @@ internal static class DtoGenerator
         }
         else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
         {
-            typeName = MapEnumerable(contextualType.GenericArguments.Single(), unknownTypes);
+            typeName = MapEnumerable(contextualType.GenericArguments.Single(), unknownTypes, nullHandling);
         }
         else if (type.BaseType?.FullName == "System.Array")
         {
@@ -187,11 +194,11 @@ internal static class DtoGenerator
             if (elementType == null)
                 throw new Exception($"Could not determine element type for {type.FullName}.");
 
-            typeName = MapEnumerable(elementType.ToContextualType(), unknownTypes);
+            typeName = MapEnumerable(elementType.ToContextualType(), unknownTypes, nullHandling);
         }
         else if (type.IsGenericType)
         {
-            var genericArgumentNames = contextualType.GenericArguments.Select(t => MapType(t, unknownTypes));
+            var genericArgumentNames = contextualType.GenericArguments.Select(t => MapType(t, unknownTypes, nullHandling));
 
             typeName = typeName.Split('`')[0];
             typeName += "<" + string.Join(", ", genericArgumentNames) + ">";
@@ -203,15 +210,17 @@ internal static class DtoGenerator
             unknownTypes.Add(type);
         }
 
-        if (contextualType.Nullability == Nullability.Nullable)
+        if (NullHandlingRules[nullHandling](contextualType))
+        {
             typeName += " | null | undefined";
+        }
 
         return typeName;
     }
 
-    private static string MapEnumerable(ContextualType elementType, List<Type> unknownTypes)
+    private static string MapEnumerable(ContextualType elementType, List<Type> unknownTypes, DtoGenerationNullHandling nullHandling)
     {
-        var elementTypeName = MapType(elementType, unknownTypes);
+        var elementTypeName = MapType(elementType, unknownTypes, nullHandling);
 
         if (elementTypeName.Contains(' '))
         {

@@ -109,5 +109,45 @@ namespace UnitTests
 
             Assert.IsTrue(dtoString.Contains("export const ThingWithIdentityTypeName = 'ThingWithIdentity'"));
         }
+
+#nullable disable
+        private class ThingWithReferences
+        {
+            public string Name { get; set; }
+            public Identity Id { get; set; }
+        }
+#nullable enable
+
+        [TestMethod]
+        public void NullHandlingOptions()
+        {
+            {
+                var dtoString = DtoGenerator.GenerateDtoToString(typeof(ThingWithReferences), new() { typeof(Identity) }, new DtoGenerationConfig
+                {
+                    NullHandling = DtoGenerationNullHandling.TreatUnknownAsNonNullable,
+                });
+                Console.WriteLine(dtoString);
+
+                Assert.IsTrue(dtoString.Contains("name: string\n"));
+            }
+            {
+                var dtoString = DtoGenerator.GenerateDtoToString(typeof(ThingWithReferences), new() { typeof(Identity) }, new DtoGenerationConfig
+                {
+                    NullHandling = DtoGenerationNullHandling.TreatUnknownAsNullable,
+                });
+                Console.WriteLine(dtoString);
+
+                Assert.IsTrue(dtoString.Contains("name: string | null | undefined\n"));
+            }
+            {
+                var dtoString = DtoGenerator.GenerateDtoToString(typeof(ThingWithReferences), new() { typeof(Identity) }, new DtoGenerationConfig
+                {
+                    NullHandling = DtoGenerationNullHandling.TreatAllReferenceTypesAsNullable,
+                });
+                Console.WriteLine(dtoString);
+
+                Assert.IsTrue(dtoString.Contains("name: string | null | undefined\n"));
+            }
+        }
     }
 }
